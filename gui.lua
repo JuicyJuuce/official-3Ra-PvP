@@ -82,6 +82,11 @@ Event.register(defines.events.on_gui_click, function(event)
 		return
 	end
 	
+	if gui.name == "close_config" then
+		destroy_config_for_all(gui.parent.name)
+		return
+	end
+	
 	if gui.name == "random_join_button" then
 		gui.parent.destroy()
 		random_join(player)
@@ -230,8 +235,9 @@ function create_config_gui(player)
 			end
 		end
 	end
-	frame.add{type = "button", name = "balance_options", caption = {"balance-options"}}.style.font = "default"
 	frame.add{type = "button", name = "config_confirm", caption = {"config-confirm"}}.style.font = "default"
+	frame.add{type = "button", name = "balance_options", caption = {"balance-options"}}.style.font = "default"
+	frame.add{type = "button", name = "close_config", caption = "Close"}.style.font = "default"
 end
 
 
@@ -339,7 +345,7 @@ end)
 Event.register(defines.events.on_entity_died, function(event)
 	local entity = event.entity
 	local force = event.force
-	if entity.type == "player" and force and force.name ~= entity.force.name and force.name ~= "enemy" then
+	if entity and entity.valid and entity.type == "player" and force and force.name ~= entity.force.name and force.name ~= "enemy" then
 		if not global.kill_counts[force.name] then global.kill_counts[force.name] = 1
 		else global.kill_counts[force.name] = global.kill_counts[force.name] + 1 end
 		update_kill_counts(force)
